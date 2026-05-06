@@ -75,13 +75,13 @@ dotnet publish src/Stacks/Stacks.csproj -c Release -r win-x64
 The single binary lands at:
 
 ```
-src/Stacks/bin/Release/net10.0/win-x64/publish/stacks.exe
+src/Stacks/bin/Release/net10.0-windows/win-x64/publish/stacks.exe
 ```
 
 Drop it into the root of a games directory:
 
 ```powershell
-Copy-Item .\src\Stacks\bin\Release\net10.0\win-x64\publish\stacks.exe D:\Games\
+Copy-Item .\src\Stacks\bin\Release\net10.0-windows\win-x64\publish\stacks.exe D:\Games\
 ```
 
 ## AOT constraints (do not regress)
