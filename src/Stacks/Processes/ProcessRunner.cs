@@ -13,8 +13,7 @@ public static class ProcessRunner
     public static async Task<InstallResult> RunInstallAsync(
         GameManifest manifest,
         string folder,
-        IProgress<string> output,
-        CancellationToken ct)
+        CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(manifest.Installer))
         {
@@ -32,15 +31,10 @@ public static class ProcessRunner
             FileName = installerPath,
             Arguments = manifest.InstallArgs ?? string.Empty,
             WorkingDirectory = folder,
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true,
+            UseShellExecute = true,
         };
 
         using var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
-        process.OutputDataReceived += (_, e) => { if (e.Data is not null) output.Report(e.Data); };
-        process.ErrorDataReceived += (_, e) => { if (e.Data is not null) output.Report(e.Data); };
 
         try
         {
@@ -54,16 +48,12 @@ public static class ProcessRunner
             return InstallResult.Fail($"Installer failed to start: {ex.Message}");
         }
 
-        process.BeginOutputReadLine();
-        process.BeginErrorReadLine();
-
         try
         {
             await process.WaitForExitAsync(ct).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
-            try { process.Kill(entireProcessTree: true); } catch { /* ignore */ }
             return InstallResult.Fail("Installation was cancelled.");
         }
 
