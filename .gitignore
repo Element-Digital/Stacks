@@ -1,0 +1,29 @@
+# Build output
+bin/
+obj/
+out/
+publish/
+
+# IDE
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Stacks state file (created at runtime next to the exe)
+stacks.state.json
+
+# NuGet
+*.nupkg
+.nuget/
+
+# Test output
+TestResults/
+*.trx
+coverage*.xml
+*.coverage
