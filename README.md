@@ -2,7 +2,7 @@
 
 A single-file Windows TUI launcher for a folder of locally installed games. Drop `stacks.exe` at the root of a games directory; each immediate subfolder that contains a `stacks.json` manifest becomes a game in the list.
 
-End users do not need .NET installed — the published binary is a self-contained NativeAOT executable.
+End users do not need .NET installed — the published binary is a self-contained single-file executable.
 
 ## Manifest schema (`stacks.json`)
 
@@ -66,7 +66,7 @@ dotnet run --project src/Stacks
 
 ## Publishing
 
-The release artifact is a self-contained NativeAOT exe:
+The release artifact is a self-contained single-file exe (the .NET runtime and native dependencies are bundled inside):
 
 ```powershell
 dotnet publish src/Stacks/Stacks.csproj -c Release -r win-x64
@@ -84,9 +84,9 @@ Drop it into the root of a games directory:
 Copy-Item .\src\Stacks\bin\Release\net10.0-windows\win-x64\publish\stacks.exe D:\Games\
 ```
 
-## AOT constraints (do not regress)
+On first launch, the bundled native libraries (Skia, HarfBuzz, ANGLE) are extracted to a per-user cache under `%LOCALAPPDATA%\Temp\.net\stacks\` and reused on subsequent launches.
 
-- Do **not** reference `Spectre.Console.Cli` — it is annotated `RequiresDynamicCode` and breaks AOT.
-- Do **not** call `AnsiConsole.WriteException(ex)` — same reason. Use `AnsiConsole.WriteLine(ex.ToString())` for fault output.
-- All JSON serialization goes through the source-generated contexts in `Manifest/ManifestJsonContext.cs` and `State/StateJsonContext.cs`. Do not add reflective `JsonSerializer` calls.
-- `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` plus `<TrimmerSingleWarn>false</TrimmerSingleWarn>` will fail the build if any new IL2026 / IL3050 warnings appear.
+## Conventions worth preserving
+
+- All JSON serialization goes through the source-generated contexts in `Manifest/ManifestJsonContext.cs` and `State/StateJsonContext.cs`. They give faster startup and zero reflection — keep using them.
+- `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` is on; new warnings fail the build.

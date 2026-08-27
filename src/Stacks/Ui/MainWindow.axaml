@@ -8,6 +8,7 @@
         x:DataType="vm:MainWindowViewModel"
         x:CompileBindings="True"
         Title="Stacks"
+        Icon="/Assets/stacks-icon.ico"
         Width="980" Height="620"
         MinWidth="700" MinHeight="420"
         FontFamily="{StaticResource InterFontFamily}">
@@ -28,10 +29,15 @@
                            Foreground="{DynamicResource SystemBaseMediumColor}"
                            FontSize="12"
                            Text="{Binding RootDirectory}" />
-                <TextBlock VerticalAlignment="Center"
-                           FontSize="20"
-                           FontWeight="SemiBold"
-                           Text="Stacks" />
+                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Image Source="/Assets/stacks-icon.png"
+                           Width="28" Height="28"
+                           VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               Text="Stacks" />
+                </StackPanel>
             </DockPanel>
         </Border>
 
